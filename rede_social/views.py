@@ -1,7 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import Post, Friendship, User
-from .forms import PostForm  # Criaremos este form depois
+from .models import Post, Friendship, User, Invite
+from .forms import PostForm  
+from django.contrib.auth.views import LoginView
+from django.urls import reverse_lazy
+
+class CustomLoginView(LoginView):
+    template_name = 'registration/login.html'
+    redirect_authenticated_user = True
+    next_page = reverse_lazy('home')
 
 @login_required
 def index(request):
@@ -45,3 +52,17 @@ def add_friend(request):
 @login_required
 def messages(request):
     return render(request, 'pages/messages.html')
+
+# def envio_de_convites(request):
+#     pass
+
+#     meus_convites = Invite.objects.filter(reciever_id=request.user)
+
+#     meus_convites.status = "APPROVED"
+
+    # Friendship.objects.create(
+    #     sender=meus_convites.sender
+    # )
+
+# def alterar_status(request, id):
+#     meus_convites = Invite.objects.filter(id=id)
